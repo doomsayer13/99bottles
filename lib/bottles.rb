@@ -1,57 +1,63 @@
 class Bottles
-# Elso korben egyesevel mentem vegig a teszteken
-# Azt kovetoen hogy egyre tobb kulonbozo opcio jott be a kepbe
-# gondoltam hogy majd switch casekkel meg fogom tudni oldani a feladatot.
-# Viszont a tobbes szamositasnal beepitett Ruby method-ot akartam hasznalni
-# azzal viszont meggyult a bajom es nem is sikerult mukodesre birnom, igy maradtam
-# a versszakok beegetesenel.
-# A tobb versszakot feldolgozo resznel jott kepbe a leszamolos ciklus, ami egy nagyobb
-# szamtol egy kisebb fele halad egyesevel, itt nem tudtam hogy ilyet nem lehet konnyeden
-# csinalni viszont a Rubynak van beepitett fuggvenye erre, aminek a neve a "downto".
-# A versszakok 99-tol 0-ig tartanak.
-# Az index == range.size - 1 kiertekelessel a tomb utolso elemet kapom el, hogy ahhoz ne
-# passzoljak egy ujsor karaktert.
+# A Ruby beepitett "join" methodja tombokhoz, kivaltotta azt a bonyolult logikat amit
+# felepitettem, ahhoz hogy az elemeken vegigfutva osszefonjam oket es hogy az utolso
+# elemen kivul mindegyikhez fuzzek egy uj sor karaktert.
+# Jelentosen egyszerusodott a verses method.
+
+# A verse method-ban levo stringeket a jobb atlathatosag miatt kiemeltem private methodokba
+# melyek nevebol eredoen lathatjuk majd hogy melyik mit csinal
+# a verse method is olvashatobb lett.
 
   def verse(number)
     case number
     when 0
-      return <<-VERSE
-No more bottles of beer on the wall, no more bottles of beer.
-Go to the store and buy some more, 99 bottles of beer on the wall.
-VERSE
+      last_verse
     when 1
-      return <<-VERSE
-1 bottle of beer on the wall, 1 bottle of beer.
-Take it down and pass it around, no more bottles of beer on the wall.
-VERSE
+      first_verse
     when 2
-      return <<-VERSE
-2 bottles of beer on the wall, 2 bottles of beer.
-Take one down and pass it around, 1 bottle of beer on the wall.
-VERSE
+      second_verse
     else
-      return <<-VERSE
-#{number} bottles of beer on the wall, #{number} bottles of beer.
-Take one down and pass it around, #{number - 1} bottles of beer on the wall.
-VERSE
+      nth_verse(number)
     end
   end
 
-  def verses(start_verse, end_verse)
-    range = (start_verse).downto(end_verse)
-    verses = ""
-    range.each_with_index do |number, index|
-      if index == range.size - 1
-        verses += verse(number)
-      else
-        verses += verse(number) + "\n"
-      end
-    end
-
-    return verses
+  def verses(from, to)
+    from.downto(to).map do |number|
+      verse(number)
+    end.join("\n")
   end
 
   def song
     verses(99, 0)
+  end
+
+  private
+
+  def last_verse
+    <<-VERSE
+No more bottles of beer on the wall, no more bottles of beer.
+Go to the store and buy some more, 99 bottles of beer on the wall.
+VERSE
+  end
+
+  def first_verse
+    <<-VERSE
+1 bottle of beer on the wall, 1 bottle of beer.
+Take it down and pass it around, no more bottles of beer on the wall.
+VERSE
+  end
+
+  def second_verse
+    <<-VERSE
+2 bottles of beer on the wall, 2 bottles of beer.
+Take one down and pass it around, 1 bottle of beer on the wall.
+VERSE
+  end
+
+  def nth_verse(n)
+    <<-VERSE
+#{n} bottles of beer on the wall, #{n} bottles of beer.
+Take one down and pass it around, #{n - 1} bottles of beer on the wall.
+VERSE
   end
 end
